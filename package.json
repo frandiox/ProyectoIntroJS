@@ -1,0 +1,14 @@
+{
+  "name": "Proyecto Introduccion JS",
+  "version": "0.0.1",
+  "author": "Francisco Dios",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.4.7",
+    "async": "0.2.9",
+    "restler": "3.1.0",
+    "prompt": "0.2.12"
+  }
+}

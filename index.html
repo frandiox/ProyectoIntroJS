@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<meta charset="UTF-8">
+	<title>Tablon mensajes</title>
+
+	<script>
+		function listarObjeto(json){
+			var um_html = "<div><p>";
+			jQuery.each(json, function(i, val) {
+				um_html += "<p><h4>"+i+"</h4>";
+				jQuery.each(val, function() {
+					um_html += "<p>"+this+"</p>";
+				});
+				um_html += "</p>";
+			});
+			um_html += "</p></div>";
+			console.log(um_html);
+			$("#resultado").html(um_html);
+		}
+
+		function listarArray(json){
+			var um_html = "<div><p>";
+			jQuery.each(json, function() {
+				um_html += "<h4>"+this+"</h4>";
+			});
+			um_html += "</p></div>";
+			console.log(um_html);
+			$("#resultado").html(um_html);
+		}
+
+		$(document).ready(function(){
+		  $("#usuario").val('Usuario');
+		});
+
+		//Listar todo
+		$(document).ready(function(){
+			$("#mostrarTodo").click(function() {
+				$.get( "/all", function( data ) {
+					console.log(data);
+					listarObjeto(data);
+				}, "json" );
+
+			});
+		});
+
+		//Listar Usuarios
+		$(document).ready(function(){
+			$("#mostrarUsuarios").click(function() {
+				$.get( "/usuarios", function( data ) {
+					console.log(data);
+					listarArray(data);
+				}, "json" );
+
+			});
+		});
+
+		//Listar mensajes de un usuario
+		$(document).ready(function(){
+			$("#buscarUsuario").click(function() {
+				$.get( "/search/usuario/"+$("#usuario").val(), function( data ) {
+					listarObjeto(data);
+				}, "json" );
+
+			});
+		});
+
+		// Buscar en mensajes
+		$(document).ready(function(){
+			$("#buscarMensaje").click(function() {
+				$.get( "/search/mensaje/"+$("#mensaje").val(), function( data ) {
+					listarObjeto(data);
+				}, "json" );
+
+			});
+		});
+
+		//Registrar usuario
+		$(document).ready(function(){
+			$("#registrarUsuario").click(function() {
+				$.ajax({ //jQuery no tiene forma PUT directa
+				    url: "/registro/"+$("#usuario").val(),
+				    type: 'PUT',
+				    dataType: 'text',
+				    success: function(data) {
+				        console.log(data);
+						//$("#respuestaServidor").text(data);
+				    }
+				});
+			});
+		});
+
+		//Enviar mensaje
+		$(document).ready(function(){
+			$("#enviarMensaje").click(function() {
+
+				$.ajax({ //jQuery no tiene forma PUT directa
+				    url: "/add/"+$("#usuario").val()+"/"+$("#mensaje").val(),
+				    type: 'PUT',
+				    dataType: 'text',
+				    success: function(data) {
+				        console.log(data);
+						//$("#respuestaServidor").text(data);
+				    }
+				});
+
+			});
+		});
+
+		//Eliminar usuario
+		$(document).ready(function(){
+			$("#eliminarUsuario").click(function() {
+
+				$.ajax({ //jQuery no tiene forma PUT directa
+				    url: "/eliminar/"+$("#usuario").val(),
+				    type: 'DELETE',
+				    dataType: 'text',
+				    success: function(data) {
+				        console.log(data);
+						//$("#respuestaServidor").text(data);
+				    }
+				});
+
+			});
+		});
+
+	</script>
+
+</head>
+<body>
+<h1>Tablón mensajes</h1>
+<hr>
+<div>
+	<div><button id="mostrarTodo" type='submit'>Mostrar todo</button><button id="mostrarUsuarios">Lista usuarios</button></div>
+	<div><input type='text' id='usuario'>
+	<button id='registrarUsuario'>Registrar</button>
+	<button id='buscarUsuario'>Buscar</button>
+	<button id='eliminarUsuario'>Eliminar</button></div>
+	<div><textarea id="mensaje" rows="5" cols="30">Mensaje</textarea><br>
+	<button id="enviarMensaje">Enviar Mensaje</button>
+	<button id="buscarMensaje">Buscar Mensaje</button></div>
+	<br>
+	<div id="respuestaServidor"></div>
+	<br>
+</div>
+<hr>
+<div id='resultado'></div>
+
+</body>
+</html>
